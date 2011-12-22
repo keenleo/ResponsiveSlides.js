@@ -1,6 +1,6 @@
-/*! ResponsiveSlides.js v1.04. (c) 2011 Viljami Salminen. MIT License. http://responsive-slides.viljamis.com  */
+/*! ResponsiveSlides.js v1.05. (c) 2011 Viljami Salminen. MIT License. http://responsive-slides.viljamis.com  */
 (function ($) {
-  $.fn.responsiveSlides = function (opts) {
+  $.fn.responsiveSlides = function (options) {
 
     // Settings
     var settings = {
@@ -15,8 +15,8 @@
 
       var $this = $(this);
 
-      if (opts) {
-        $.extend(settings, opts);
+      if (options) {
+        $.extend(settings, options);
       }
 
       var slideshow = function () {
@@ -34,103 +34,103 @@
           visible = { 'position': 'relative', 'float': 'left' },
           hidden = { 'position': 'absolute', 'float': 'none' };
 
-        // Don't run if there's only one slide
-        if ($this.find($slide).length <= 1) {
-          return;
-        }
-
-        $slide.each(function (i) {
-          this.id = slideClassPrefix + i;
-        });
-
-        $slide.css({
-          'top': 0,
-          'left': 0,
-          'width': '100%',
-          'height': 'inherit',
-          'position': 'absolute'
-        });
-
-        $this.css({
-          'max-width': parseFloat(settings.maxwidth),
-          'width': '100%',
-          'overflow': 'hidden',
-          'position': 'relative'
-        });
-
-        $this.find(':first-child').css(visible);
-        $this.find($slide + ':gt(0)').hide();
-
-        // Auto: true
-        if (settings.auto === true) {
-          setInterval(function () {
-            $this.find(':first-child').fadeOut(fadetime, function () {
-              $(this).css(hidden);
-            }).next($slide).fadeIn(fadetime, function () {
-              $(this).css(visible);
-            }).end().appendTo($this);
-          }, parseFloat(settings.speed));
-
-        // Auto: false
-        } else {
-
-          tabMarkup = '';
+        // Only run if there's more than one slide
+        if ($this.find($slide).length > 1) {
 
           $slide.each(function (i) {
-            var n = i + 1;
-            tabMarkup +=
-              '<li>' +
-              '<a href="#' + slideClassPrefix + n + '"' +
-              'class="' + slideClassPrefix + n + '">' + n + '</a>' +
-              '</li>';
+            this.id = slideClassPrefix + i;
           });
 
-          $pagination.append(tabMarkup);
-
-          $this.after($pagination).find(':first-child').addClass(visibleClass);
-          $('.' + slideClassPrefix + '1').parent().addClass(activeClass);
-
-          $('.' + tabsClass + ' a').each(function (i) {
-            var $el = $(this);
-            
-            $el.bind('click', function (e) {
-              e.preventDefault();
-            });
-
-            $el.bind(startEvent, function () {
-              
-              // if currently animated
-              if ($('.' + visibleClass + ':animated').length) {
-                return false;
-              }
-              
-              if (!($el.parent().hasClass(activeClass))) {
-                $('.' + tabsClass + ' li').removeClass(activeClass);
-                $('.' + visibleClass).stop().fadeOut(fadetime, function () {
-                  $(this).removeClass(visibleClass).css(hidden);
-                }).end();
-                $('#' + slideClassPrefix + i).stop().fadeIn(fadetime, function () {
-                  $(this).addClass(visibleClass).css(visible);
-                }).end();
-                $el.parent().addClass(activeClass);
-              }
-              
-            });
-            
-          
+          $slide.css({
+            'top': 0,
+            'left': 0,
+            'width': '100%',
+            'height': 'inherit',
+            'position': 'absolute'
           });
+
+          $this.css({
+            'max-width': parseFloat(settings.maxwidth),
+            'width': '100%',
+            'overflow': 'hidden',
+            'position': 'relative'
+          })
+            .find(':first-child').css(visible).end()
+            .find($slide + ':gt(0)').hide();
+
+          // Auto: true
+          if (settings.auto === true) {
+
+            setInterval(function () {
+              $this.find(':first-child').fadeOut(fadetime, function () {
+                $(this).css(hidden);
+              }).next($slide).fadeIn(fadetime, function () {
+                $(this).css(visible);
+              }).end().appendTo($this);
+            }, parseFloat(settings.speed));
+
+          // Auto: false
+          } else {
+
+            tabMarkup = '';
+
+            $slide.each(function (i) {
+              var n = i + 1;
+
+              tabMarkup +=
+                '<li>' +
+                '<a href="#' + slideClassPrefix + n + '"' +
+                'class="' + slideClassPrefix + n + '">' + n + '</a>' +
+                '</li>';
+            });
+
+            $pagination.append(tabMarkup);
+
+            $this.after($pagination).find(':first-child').addClass(visibleClass);
+            $('.' + slideClassPrefix + '1').parent().addClass(activeClass);
+
+            $('.' + tabsClass + ' a').each(function (i) {
+              var $el = $(this);
+
+              $el.bind('click', function (e) {
+                e.preventDefault();
+              });
+
+              $el.bind(startEvent, function () {
+
+                // if currently animated
+                if ($('.' + visibleClass + ':animated').length) {
+                  return false;
+                }
+
+                if (!($el.parent().hasClass(activeClass))) {
+                  $('.' + tabsClass + ' li').removeClass(activeClass);
+                  $('.' + visibleClass).stop().fadeOut(fadetime, function () {
+                    $(this).removeClass(visibleClass).css(hidden);
+                  }).end();
+                  $('#' + slideClassPrefix + i).stop().fadeIn(fadetime, function () {
+                    $(this).addClass(visibleClass).css(visible);
+                  }).end();
+                  $el.parent().addClass(activeClass);
+                }
+
+              });
+
+            });
+          }
+
         }
 
       };
 
-      // Fallback to make IE6 support CSS max-width
+      // Fallback to support CSS max-width
       var widthSupport = function () {
-
         var maxwidth = parseFloat(settings.maxwidth);
 
-        if (opts && opts.maxwidth) {
+        if (options && options.maxwidth) {
 
           if (typeof document.body.style.maxHeight === 'undefined') {
+
             $this.each(function () {
               $this.css('width', '100%');
               if ($this.width() > maxwidth) {
@@ -139,6 +139,7 @@
                 $this.css('width', '100%');
               }
             });
+
           }
 
         }
@@ -155,5 +156,6 @@
       });
 
     });
+
   };
 })(jQuery);
