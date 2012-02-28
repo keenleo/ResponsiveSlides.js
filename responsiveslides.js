@@ -59,6 +59,8 @@
                 $(this).css(hidden);
               }).next($slide).fadeIn(fadetime, function () {
                 $(this).css(visible);
+				var d = this.getAttribute('description');
+				$('#description').html(d);
               }).end().appendTo($this);
             }, parseFloat(settings.speed));
 

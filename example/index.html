@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
   <link rel="stylesheet" href="styles.css?v1.03" />
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-  <script src="../responsiveslides.min.js"></script>
+  <script src="../responsiveslides.js"></script>
   <script>
     jQuery(function() {
 
@@ -32,11 +32,15 @@
     <h2>Responsive jQuery Slideshow plugin that weights under 1kb</h2>
 
     <!-- Slideshow 1 -->
-    <div id="slides">
-      <img src="1.jpg" alt="" />
-      <img src="2.jpg" alt="" />
-      <img src="3.jpg" alt="" />
-    </div>
+	<div id="slideswrap">
+		<div id="slides">
+			<img description="these are red seats, i sat in one." src="1.jpg" alt="" />
+			<img description="old shwang" src="2.jpg" alt="" />
+			<img description="oh no, a dozer!" src="3.jpg" alt="" />
+		</div>
+	<!-- Holds the description text. I kind of cheated and set the default to the first img description. -->
+	<div id="description">these are red seats, i sat in one.</div>
+	</div>
 
     <!-- Slideshow 2 -->
     <div id="slides2">
